@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+
+			http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.1.xsd">
+
+    <description>任务配置信息</description>
+
+    <task:scheduled-tasks>
+        <!-- 检查机器是否掉线的任务每60s执行一次，因为考勤机拿到数据以后距离下次获取数据最大时间间隔为50S -->
+        <task:scheduled ref="machineTask" method="checkMachineStatus" cron="0 0/1 * * * ? "/>
+        <!--每日考勤机上传考勤记录,暂时不使用-->
+        <task:scheduled ref="machineTask" method="getCheckinDataFromMachine" cron="0 30 22 * * ?"/>
+        <!-- 企业空间资源预警/告警任务 每天22点30执行 -->
+        <!--<task:scheduled ref="noticeTask" method="spaceCompanyMonitorTask" cron="0 30 22 * * ?" />-->
+        <!--定时计算员工的考勤日报表-->
+        <task:scheduled ref="daysDetailTask" method="calculateEveryMonth" cron="0 0/30 * * * ? "/>
+    </task:scheduled-tasks>
+</beans>
